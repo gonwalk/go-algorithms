@@ -48,7 +48,7 @@ func longestCommonPrefix(strs []string) string {
         return ""
     }
     prefix := strs[0]
-    for i := 1; i < len(strs); i++{                // 追个字符串比较，看看是否有共同的前缀prefix
+    for i := 1; i < len(strs); i++{                // 逐个字符串比较，看看是否有共同的前缀prefix
         for strings.Index(strs[i], prefix) != 0 {  // 如果当前子串prefix不是字符串strs[i]的前缀（前几个字符相同），则对前缀进行更新（去掉末尾字符），直至前缀为空返回空字符串
             prefix = prefix[:len(prefix) - 1]      // 更新前缀（去掉最后一个字符）
             if(len(prefix) == 0 ){

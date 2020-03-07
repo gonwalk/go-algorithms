@@ -149,12 +149,12 @@ func isPalindromic(s *string, i, j int ) bool {
 	start,end := 0,0  // start和end分别表示当前回文串在s串中开始和结束处的索引
 	for i:=0;i<len(s);i++{
 		len1 :=expandAroundCenter(s,i,i) //a [b] a bd 当字符串s长度为奇数时，回文串的中间索引只有一个，需要从这个数开始向两边扩散
-		len2 := expandAroundCenter(s,i,i+1)//a [bb] c 当字符串s长度为奇数时，回文串的中间位置有两个，需要从这两个中间的索引开始向两边扩散
+		len2 := expandAroundCenter(s,i,i+1)//a [bb] c 当字符串s长度为偶数时，回文串的中间位置有两个，需要从这两个中间的索引开始向两边扩散
 		len := int(math.Max(float64(len1),float64(len2))) //比较出两个的最长的长度
 		if len > end - start{
 			//len=3  i=1
 			start =i-(len-1)/2    // i:在这里就是一个回文数的中间数，（len-1）:是处理len可能是偶数的情况，(len-1)/2表示回文的半径，start既是回文开始处的索引
-			end = i+len/          // end回文结束处的索引
+			end = i+len/2          // end回文结束处的索引
 		}
 	}
 	return string(s[start:end+1])

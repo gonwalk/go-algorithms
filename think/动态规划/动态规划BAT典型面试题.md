@@ -1,8 +1,4 @@
 
-
-
-
-
 # 1.爬楼梯
 
 链接：https://leetcode-cn.com/problems/climbing-stairs
@@ -31,6 +27,8 @@
 2.  1 阶 + 2 阶
 3.  2 阶 + 1 阶
 
+
+## 1.2 算法实现
 
 方法一：暴力法（不可取，超时，效率太低）
 
@@ -161,4 +159,78 @@ public class Solution {
 
 
 链接：https://leetcode-cn.com/problems/climbing-stairs/solution/pa-lou-ti-by-leetcode/
+
+# 2.不同路径II
+
+算法来源：
+
+来源：力扣（LeetCode 63）
+链接：https://leetcode-cn.com/problems/unique-paths-ii
+
+## 2.1 题目描述
+
+一个机器人位于一个 m x n 网格的左上角 （起始点在下图中标记为“Start” ）。
+
+机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为“Finish”）。
+
+现在考虑网格中有障碍物。那么从左上角到右下角将会有多少条不同的路径？
+
+## 2.2 算法实现
+
+### 2.2.1 算法思路
+
+使用动态规划的思想，步骤如下：
+```
+1.声明动态规划数组dp[][]，用于计算通往当前节点的路径数。
+2.如果第一个格点 obstacleGrid[0,0] 是 1，说明有障碍物，那么机器人不能做任何移动，我们返回结果 0。否则，如果 obstacleGrid[0,0] 是 0，我们初始化这个值为 1 然后继续算法。
+3.遍历第一行，如果有一个格点初始值为 1 ，说明当前节点有障碍物，没有路径可以通过，设值为 0 ；否则设这个值是前一个节点的值 obstacleGrid[i,j] = obstacleGrid[i,j-1]。
+4.遍历第一列，如果有一个格点初始值为 1 ，说明当前节点有障碍物，没有路径可以通过，设值为 0 ；否则设这个值是前一个节点的值 obstacleGrid[i,j] = obstacleGrid[i-1,j]。
+5.现在，从 obstacleGrid[1,1] 开始遍历整个数组，如果某个格点初始不包含任何障碍物，就把值赋为上方和左侧两个格点方案数之和 obstacleGrid[i,j] = obstacleGrid[i-1,j] + obstacleGrid[i,j-1]。
+6.如果这个点有障碍物，设值为 0 ，这可以保证不会对后面的路径产生贡献。
+```
+
+### 2.2.2 代码实现
+```go
+func uniquePathsWithObstacles(obstacleGrid [][]int) int {
+    m, n := len(obstacleGrid), len(obstacleGrid[0])
+    if(m <= 0 || n <= 0) {
+        return 0
+    }
+    dp := make([][]int, m)
+    for i := 0; i < m; i++ {
+        dp[i] = make([]int, n)
+    }
+    if(obstacleGrid[0][0] == 1 || obstacleGrid[m-1][n-1] == 1) {
+        return 0                        // 起点或重点有障碍，不能进行任何走动，返回0种路径
+    } 
+    dp[0][0] = 1
+    
+    for i := 1; i < m; i++ {
+        if(obstacleGrid[i][0] != 1) {   // 第0列中，当前位置没有障碍，就赋值为上个位置的路径数
+            dp[i][0] = dp[i-1][0]
+        } else {
+            dp[i][0] = 0                // 第0列中，有任何一个格子有障碍，就不能往下走，当前路径数赋为0
+        }
+    }
+
+    for i := 1; i < n; i++ {
+        if(obstacleGrid[0][i] != 1) {   // 第0行中，当前位置没有障碍，就赋值为上个位置的路径数
+            dp[0][i] = dp[0][i-1]
+        } else {
+            dp[0][i] = 0
+        }
+    }
+    
+    for i := 1; i < m; i++ {
+        for j := 1; j < n; j++ {
+            if(obstacleGrid[i][j] != 1) {   // 当前位置没有障碍，就赋值为左侧和上侧位置的路径和
+                dp[i][j] = dp[i-1][j] + dp[i][j-1]
+            } else {                        // 当前位置有障碍，则当前位置路径数置为0
+                dp[i][j] = 0
+            }
+        }
+    }
+    return dp[m-1][n-1]
+}
+```
 

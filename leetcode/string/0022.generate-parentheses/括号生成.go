@@ -153,3 +153,26 @@ class Solution {
 算法: 递归关系 n对有效括号序列由c 对有效括号序列和 n-c对有效括号序列组成
 n对有效括号序列 是由 "(" + $1 + ")" + $2 拼接而成, $1 表示c(0<=c<n)对有效括号序列集合中的某一个元素, $2表示剩下的n-1-c对有效括号序列构成的集合中的某一个元素. 这样说大致就能看懂程序在做什么了
 这里要说一下为什么要ans.add("(" + left + ")" + right); 而不是ans.add(left+right)呢, 应该是因为有一种特殊的情况 如果left right(n=4) 全是()() 这种分隔的小括号 则当(left,right)为(1,3)或者(2,2)或者(3,1) 就会出现()()()()重复出现多次的情况, 而上面那种做法可以将()()()()的情况放到left=0,rigint=3的情况中,且只会出现一次, 非常nice
+
+
+func generateParenthesis(n int) []string {
+	res := make([]string, 0)
+	gene(&res,"",n,n)
+	return res
+}
+
+// 递归生成括号
+// left和right表示还剩余多少个左右半括号未生成，str是初始时字符串（为空）
+func gene(res *[]string, str string, left, right int) {
+	if left == 0 { // 此时表明left已经出栈完毕，需要把right中的全部出栈
+		for i := 0; i < right; i++ {
+			str += ")"
+		}
+		*res = append(*res, str)
+		return
+	}
+	gene(res, str+"(", left-1,right)
+	if left < right {
+		gene(res, str+")", left,right-1)
+	}
+}
